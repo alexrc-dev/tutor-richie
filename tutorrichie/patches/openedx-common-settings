@@ -1,2 +1,3 @@
 # Richie settings (common)
 FEATURES["ENABLE_MKTG_SITE"] = True
+X_FRAME_OPTIONS = "ALLOW"

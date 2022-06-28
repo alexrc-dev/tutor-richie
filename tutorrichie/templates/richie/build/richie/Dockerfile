@@ -6,8 +6,8 @@ RUN apt update \
     && rm -rf /var/lib/apt/lists/*
 
 # Clone repo
-ARG RICHIE_REPOSITORY=https://github.com/openfun/richie.git
-ARG RICHIE_VERSION={{ RICHIE_RELEASE_VERSION }}
+ARG RICHIE_REPOSITORY=https://github.com/alexrc-dev/richie.git
+ARG RICHIE_VERSION=v2.9.2
 RUN git clone $RICHIE_REPOSITORY --branch $RICHIE_VERSION --depth 1 /richie
 
 #--------- Front-end builder image

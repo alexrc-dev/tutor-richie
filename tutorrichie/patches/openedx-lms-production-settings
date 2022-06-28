@@ -1,7 +1,9 @@
 # Richie settings (lms production)
+X_FRAME_OPTIONS = "ALLOW"
 RICHIE_ROOT_URL = "{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ RICHIE_HOST }}"
 MARKETING_SITE_ROOT = RICHIE_ROOT_URL
 MKTG_URLS = {
-  "ROOT": RICHIE_ROOT_URL
+  "ROOT": RICHIE_ROOT_URL,
+  "COURSES": "/courses/?limit=21&offset=0"
 }
 CORS_ORIGIN_WHITELIST.append("{% if ENABLE_HTTPS %}https{% else %}http{% endif %}://{{ RICHIE_HOST }}")
