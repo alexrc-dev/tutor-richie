@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from configurations import values
 from settings import Development, Production
 
-supported_languages = [("en", _("English")), ("es_ES", _("Spanish")),]
+supported_languages = [("en", _("English")), ("es-ES", _("Spanish")),]
 extra_language_code = "{{ LANGUAGE_CODE }}"
 extra_language_code = "es" if extra_language_code == "es-419" else extra_language_code
 extra_language = dict(global_settings.LANGUAGES).get(extra_language_code)
