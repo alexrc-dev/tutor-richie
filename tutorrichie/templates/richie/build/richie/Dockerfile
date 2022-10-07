@@ -11,7 +11,7 @@ ARG RICHIE_VERSION=codea-la
 RUN git clone $RICHIE_REPOSITORY --branch $RICHIE_VERSION --depth 1 /richie
 
 #--------- Front-end builder image
-FROM node:14 as frontend-builder
+FROM node:16 as frontend-builder
 
 COPY --from=base /richie/src/frontend /app/richie/src/frontend
 WORKDIR /app/richie/src/frontend
