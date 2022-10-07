@@ -7,7 +7,7 @@ RUN apt update \
 
 # Clone repo
 ARG RICHIE_REPOSITORY=https://github.com/alexrc-dev/richie.git
-ARG RICHIE_VERSION=v2.9.2
+ARG RICHIE_VERSION=codea-la
 RUN git clone $RICHIE_REPOSITORY --branch $RICHIE_VERSION --depth 1 /richie
 
 #--------- Front-end builder image
