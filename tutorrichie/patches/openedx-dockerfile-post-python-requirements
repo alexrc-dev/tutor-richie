@@ -1,3 +1,3 @@
 # Install Richie catalog integration app
 # The Use case, not require automatic sync of course runs
-# RUN pip install -e "git+https://github.com/overhangio/tutor-richie.git#egg=richie-edx-platform&subdirectory=contrib/edx-platform"
+RUN pip install -e "git+https://github.com/alexrc-dev/tutor-richie.git#egg=richie-edx-platform&subdirectory=contrib/edx-platform"
