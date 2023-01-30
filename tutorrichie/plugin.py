@@ -1,10 +1,11 @@
 from glob import glob
 import os
 import pkg_resources
+from tutor import hooks
 
 from .__about__ import __version__
 
-templates = pkg_resources.resource_filename("tutorrichie", "templates")
+# templates = pkg_resources.resource_filename("tutorrichie", "templates")
 
 config = {
     "add": {
@@ -23,11 +24,60 @@ config = {
     },
 }
 
-hooks = {
-    "build-image": {"richie": "{{ RICHIE_DOCKER_IMAGE }}"},
-    "remote-image": {"richie": "{{ RICHIE_DOCKER_IMAGE }}"},
-    "init": ["mysql", "richie", "richie-openedx"],
-}
+# hooks = {
+#     "build-image": {"richie": "{{ RICHIE_DOCKER_IMAGE }}"},
+#     "remote-image": {"richie": "{{ RICHIE_DOCKER_IMAGE }}"},
+#     "init": ["mysql", "richie", "richie-openedx"],
+# }
+# Initialization hooks
+for service in ("mysql", "richie", "richie-openedx"):
+    with open(
+            os.path.join(
+                pkg_resources.resource_filename("tutorrichie", "templates"),
+                "richie",
+                "tasks",
+                service,
+                "init",
+            ),
+            encoding="utf-8",
+    ) as task_file:
+        hooks.Filters.CLI_DO_INIT_TASKS.add_item((service, task_file.read()))
+# Image management
+hooks.Filters.IMAGES_BUILD.add_items(
+    [
+        (
+            "richie",
+            ("plugins", "richie", "build", "richie"),
+            "{{ RICHIE_DOCKER_IMAGE }}",
+            (),
+        ),
+    ]
+)
+hooks.Filters.IMAGES_PULL.add_items(
+    [
+        (
+            "richie",
+            "{{ RICHIE_DOCKER_IMAGE }}",
+        ),
+    ]
+)
+hooks.Filters.IMAGES_PUSH.add_items(
+    [
+        (
+            "richie",
+            "{{ RICHIE_DOCKER_IMAGE }}",
+        ),
+    ]
+)
+hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
+    pkg_resources.resource_filename("tutorrichie", "templates")
+)
+hooks.Filters.CONFIG_DEFAULTS.add_items(
+    [(f"RICHIE_{key}", value) for key, value in config["defaults"].items()]
+)
+hooks.Filters.CONFIG_UNIQUE.add_items(
+    [(f"RICHIE_{key}", value) for key, value in config["add"].items()]
+)
 
 
 def patches():
