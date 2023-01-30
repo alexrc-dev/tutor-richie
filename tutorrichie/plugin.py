@@ -35,7 +35,7 @@ for service in ("mysql", "richie", "richie-openedx"):
             os.path.join(
                 pkg_resources.resource_filename("tutorrichie", "templates"),
                 "richie",
-                "tasks",
+                "hooks",
                 service,
                 "init",
             ),
