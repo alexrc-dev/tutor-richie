@@ -1,7 +1,7 @@
 from glob import glob
 import os
 import pkg_resources
-from tutor import hooks
+from tutor import hooks as tutor_hooks
 
 from .__about__ import __version__
 
@@ -41,9 +41,9 @@ for service in ("mysql", "richie", "richie-openedx"):
             ),
             encoding="utf-8",
     ) as task_file:
-        hooks.Filters.CLI_DO_INIT_TASKS.add_item((service, task_file.read()))
+        tutor_hooks.Filters.CLI_DO_INIT_TASKS.add_item((service, task_file.read()))
 # Image management
-hooks.Filters.IMAGES_BUILD.add_items(
+tutor_hooks.Filters.IMAGES_BUILD.add_items(
     [
         (
             "richie",
@@ -53,7 +53,7 @@ hooks.Filters.IMAGES_BUILD.add_items(
         ),
     ]
 )
-hooks.Filters.IMAGES_PULL.add_items(
+tutor_hooks.Filters.IMAGES_PULL.add_items(
     [
         (
             "richie",
@@ -61,7 +61,7 @@ hooks.Filters.IMAGES_PULL.add_items(
         ),
     ]
 )
-hooks.Filters.IMAGES_PUSH.add_items(
+tutor_hooks.Filters.IMAGES_PUSH.add_items(
     [
         (
             "richie",
@@ -69,23 +69,24 @@ hooks.Filters.IMAGES_PUSH.add_items(
         ),
     ]
 )
-hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
+tutor_hooks.Filters.ENV_TEMPLATE_ROOTS.add_item(
     pkg_resources.resource_filename("tutorrichie", "templates")
 )
-hooks.Filters.CONFIG_DEFAULTS.add_items(
+tutor_hooks.Filters.CONFIG_DEFAULTS.add_items(
     [(f"RICHIE_{key}", value) for key, value in config["defaults"].items()]
 )
-hooks.Filters.CONFIG_UNIQUE.add_items(
+tutor_hooks.Filters.CONFIG_UNIQUE.add_items(
     [(f"RICHIE_{key}", value) for key, value in config["add"].items()]
 )
 
-
-def patches():
-    all_patches = {}
-    patches_dir = pkg_resources.resource_filename("tutorrichie", "patches")
-    for path in glob(os.path.join(patches_dir, "*")):
-        with open(path) as patch_file:
-            name = os.path.basename(path)
-            content = patch_file.read()
-            all_patches[name] = content
-    return all_patches
+# Load patches from files
+for path in glob(
+        os.path.join(
+            pkg_resources.resource_filename("tutorrichie", "patches"),
+            "*",
+        )
+):
+    with open(path, encoding="utf-8") as patch_file:
+        tutor_hooks.Filters.ENV_PATCHES.add_item(
+            (os.path.basename(path), patch_file.read())
+        )
